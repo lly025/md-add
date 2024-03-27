@@ -1,6 +1,6 @@
 {
   "name": "md-add",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "初始化项目MD描述文件",
   "main": "index.js",
   "keywords": [
