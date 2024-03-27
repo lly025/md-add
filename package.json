@@ -1,0 +1,18 @@
+{
+  "name": "md-add",
+  "version": "1.1.0",
+  "description": "初始化项目MD描述文件",
+  "main": "index.js",
+  "keywords": [
+    "目录结构",
+    "md"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lly0025",
+  "license": "ISC",
+  "bin": {
+    "md-add": "/index.js"
+  }
+}
