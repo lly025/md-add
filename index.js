@@ -22,6 +22,15 @@ function getDefaultConfig () {
   }
 }
 
+// 添加 @Description 后面的内容到文件名后面
+function appendDescriptionToFilename(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const match = content.match(/@Description:\s*([^>]+)-->\n/);
+  if (match && match[1]) {
+    return match[1].trim();
+  }
+}
+
 /** 处理文件夹 */
 function handleDir (dirPath, filePath, dir, index) {
   // 获取要忽略的文件夹列表
@@ -30,7 +39,7 @@ function handleDir (dirPath, filePath, dir, index) {
   const ignorePaths = defaultConfig.ignoreConfig.path
   if (ignoreDirs.includes(dir) || ignorePaths.includes(dirPath.replace(/\\/g, '/')) || ignorePaths.includes(filePath.replace(/\\/g, '/'))) return;
   const defaultDesc = defaultConfig.defaultDescs[dir]
-  markdownContent += `${' '.repeat(index * 2)}&-- ${dir + (defaultDesc ? "（" + defaultDesc + "）" : "")}\n`;
+  markdownContent += `${' '.repeat(index * 2)}${defaultConfig.separate}-- ${dir + (defaultDesc ? "（" + defaultDesc + "）" : "")}\n`;
   generateMarkdown(filePath, index + 1); // 递归处理子目录，并增加缩进
 }
 
@@ -43,7 +52,7 @@ function handleFile (dirPath, filePath, file, index) {
   if (ignoreFiles.includes(file) || ignorePaths.includes(dirPath.replace(/\\/g, '/')) || ignorePaths.includes(filePath.replace(/\\/g, '/'))) return;
   const defaultDesc = defaultConfig.defaultDescs[file]
   const fileDesc = appendDescriptionToFilename(filePath);
-  markdownContent += `${' '.repeat(index * 2)}&-- ${file + (defaultDesc ? "（" + defaultDesc + "）" : "") + (fileDesc ? "（" + fileDesc + "）" : "")}\n`;
+  markdownContent += `${' '.repeat(index * 2)}${defaultConfig.separate}-- ${file + (defaultDesc ? "（" + defaultDesc + "）" : "") + (fileDesc ? "（" + fileDesc + "）" : "")}\n`;
 }
 
 /** 生成Markdown */
@@ -62,21 +71,12 @@ function generateMarkdown(dirPath, index = 0) {
   });
 }
 
-// 添加 @Description 后面的内容到文件名后面
-function appendDescriptionToFilename(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
-  const match = content.match(/@Description:\s*([^>]+)-->\n/);
-  if (match && match[1]) {
-    return match[1].trim();
-  }
-}
-
 /** 执行 */
 function start () {
   getDefaultConfig()
   generateMarkdown('./')
   // 写入文件
-  fs.writeFileSync('PROJECTDIRSTRUCTURE.md', markdownContent);
+  fs.writeFileSync(`${defaultConfig.fileName || 'PROJECTDIRSTRUCTURE'}.md`, markdownContent);
 }
 
 start()
