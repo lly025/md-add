@@ -14,7 +14,7 @@ function getDefaultConfig () {
   // 获取配置信息
   try {
     // 获取当前目录下的 mdAddConfig.js 配置文件
-    const configFilePath = path.join(__dirname, 'mdAddConfig.js');
+    const configFilePath = path.join(process.cwd(), 'mdAddConfig.js');
     const defaultConfigFile = fs.readFileSync(configFilePath, "utf8")
     defaultConfig = JSON.parse(defaultConfigFile)
   } catch (error) {
